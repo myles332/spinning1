@@ -1,6 +1,6 @@
 import Error from "next/error";
 import { NextResponse } from "next/server";
-const SpotifyWebApi = require("spotify-web-api-node");
+import SpotifyWebApi from "spotify-web-api-node";
 
 export async function POST(Request: Request) {
   const req = await Request.json();
@@ -11,18 +11,18 @@ export async function POST(Request: Request) {
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET
   })
 
-  console.log("HELLOOO?")
-  spotify.authorizationCodeGrant(code).then((data: any) => {
+  try {
+    const data = await spotify.authorizationCodeGrant(code);
     console.log("DATA");
+    console.log(data);
     return NextResponse.json({
       accessToken: data.body.access_token,
       refreshToken: data.body.refresh_token,
       expiresIn: data.body.expires_in,
-    })
-  })
-  .catch((error: Error) => {
+    });
+  } catch (error) {
+    console.log("ERROR");
     console.log(error);
     return NextResponse.json({ status: 400 });
-  })
-  return NextResponse.json({ status: 500 });
+  }
 }
