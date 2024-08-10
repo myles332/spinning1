@@ -4,24 +4,22 @@ const SpotifyWebApi = require("spotify-web-api-node");
 
 export async function POST(request: Request) {
   const req = await request.json();
-  const refreshToken = req.refreshToken
+  const refreshToken = req.refreshToken;
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.REDIRECT_URI,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: "http://localhost:3000/spin",
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     refreshToken,
-  })
+  });
 
-  spotifyApi
-    .refreshAccessToken()
-    .then((data: any) => {
-      return NextResponse.json({
-        accessToken: data.body.accessToken,
-        expiresIn: data.body.expiresIn,
-      })
-    })
-    .catch((err: any) => {
-      console.log(err)
-      return NextResponse.json({ status: 400 })
-    })
+  try {
+    const data = await spotifyApi.refreshAccessToken();
+    return NextResponse.json({
+      accessToken: data.body.accessToken,
+      expiresIn: data.body.expiresIn,
+    });
+  } catch(error) {
+    console.log(error);
+    return NextResponse.json({ status: 400 });
+  }
 }
