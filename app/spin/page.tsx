@@ -46,8 +46,8 @@ export default function Page({
   const CHECK_NEW_SONG_INTERVAL = 10000;
 
   const router = useRouter();
-  let accessToken;
-  let expiresIn;
+  let accessToken: string | null = "";
+  let expiresIn: number | null = 0;
   if (typeof window !== "undefined") {
     accessToken = localStorage.getItem("access_token");
     expiresIn = parseInt(localStorage.getItem("expires_in") || "");
