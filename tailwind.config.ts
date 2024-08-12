@@ -10,6 +10,9 @@ module.exports = {
         'deep-blue': '#0a192f',
         'button-blue': '#1e3a8a',
       },
+      animation: {
+        'spin-slow': 'spin-slow 3s linear infinite',
+      },
     },
   },
   plugins: [],

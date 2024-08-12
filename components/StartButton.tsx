@@ -6,6 +6,6 @@ const AUTH_URL =
 
 export default function Button() {
   return (
-    <Link href={AUTH_URL} className="bg-blue-500/40 text-white px-8 py-2 rounded hover:bg-blue-900/80 transition-colors">start</Link>
+    <Link href={AUTH_URL} className="bg-[#5856D6]/80 text-white px-8 py-2 rounded hover:bg-[#5856D6] transition-colors">start</Link>
   );
 }

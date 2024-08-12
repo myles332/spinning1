@@ -17,7 +17,9 @@ export default function useAuth(code: string) {
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
-        // window.history.pushState({}, "", "/")
+        localStorage.setItem("access_token", res.data.accessToken);
+        localStorage.setItem("expires_in", res.data.expiresIn);
+        window.history.pushState({}, "", "/spin")
       })
       .catch(() => {
         window.location.href = "/"
@@ -36,6 +38,8 @@ export default function useAuth(code: string) {
           console.log("ACCESS TOKEN");
           setAccessToken(res.data.accessToken)
           setExpiresIn(res.data.expiresIn)
+          localStorage.setItem("access_token", res.data.accessToken);
+          localStorage.setItem("expires_in", res.data.expiresIn);
         })
         .catch(() => {
           window.location.href = "/"
