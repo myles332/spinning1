@@ -2,24 +2,23 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 
 export default function useAuth(code: string) {
+  const BASE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
   const [accessToken, setAccessToken] = useState()
   const [refreshToken, setRefreshToken] = useState()
   const [expiresIn, setExpiresIn] = useState()
 
   useEffect(() => {
     axios
-      .post("http://localhost:3000/auth/login", {
+      .post(`${BASE_URL}/auth/login`, {
         code,
       })
       .then(res => {
-        console.log("RES");
-        console.log(res);
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
         localStorage.setItem("access_token", res.data.accessToken);
         localStorage.setItem("expires_in", res.data.expiresIn);
-        window.history.pushState({}, "", "/spin")
+        window.history.pushState({}, "", "/spin") // bad, can click back button?
       })
       .catch(() => {
         window.location.href = "/"
@@ -30,12 +29,10 @@ export default function useAuth(code: string) {
     if (!refreshToken || !expiresIn) return;
     const interval = setInterval(() => {
       axios
-        .post("http://localhost:3000/auth/refresh", {
+        .post(`${BASE_URL}/auth/refresh`, {
           refreshToken,
         })
         .then(res => {
-          console.log("RES");
-          console.log("ACCESS TOKEN");
           setAccessToken(res.data.accessToken)
           setExpiresIn(res.data.expiresIn)
           localStorage.setItem("access_token", res.data.accessToken);

@@ -100,7 +100,11 @@ export default function Page({
     const getDescription = async () => {
       try {
         if (!trackInfo) return;
-        const {data, error}: any = await axios.get(`http://localhost:3000/gemini?artist=${trackInfo.artists?.[0]?.name}`);
+        const geminiSlug = `/gemini?artist=${trackInfo.artists?.[0]?.name}`;
+        const {data, error}: any = await axios.get((
+          process.env.VERCEL_URL 
+            ? `https://${process.env.VERCEL_URL}` 
+            : "http://localhost:3000") + geminiSlug); // works?
         if (error) throw new Error(error);
         if (data.text) {
           setDescription(data.text);
