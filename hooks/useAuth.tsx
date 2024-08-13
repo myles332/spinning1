@@ -1,4 +1,7 @@
+"use client"
+
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import axios from "axios"
 
 export default function useAuth(code: string) {
@@ -8,6 +11,7 @@ export default function useAuth(code: string) {
   const [accessToken, setAccessToken] = useState()
   const [refreshToken, setRefreshToken] = useState()
   const [expiresIn, setExpiresIn] = useState()
+  const router = useRouter();
 
   useEffect(() => {
     axios
@@ -18,12 +22,9 @@ export default function useAuth(code: string) {
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
-        localStorage.setItem("access_token", res.data.accessToken);
-        localStorage.setItem("expires_in", res.data.expiresIn);
-        window.history.pushState({}, "", "/spin") // bad, can click back button?
       })
       .catch(() => {
-        window.location.href = "/"
+        router.push("/");
       })
   }, [code])
 
@@ -37,11 +38,9 @@ export default function useAuth(code: string) {
         .then(res => {
           setAccessToken(res.data.accessToken)
           setExpiresIn(res.data.expiresIn)
-          localStorage.setItem("access_token", res.data.accessToken);
-          localStorage.setItem("expires_in", res.data.expiresIn);
         })
         .catch(() => {
-          window.location.href = "/"
+          router.push("/");
         })
     }, (expiresIn - 60) * 1000)
 

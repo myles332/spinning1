@@ -2,15 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Audio } from "react-loader-spinner";
-import useAuth from "@/hooks/useAuth"
 import SpotifyWebApi from "spotify-web-api-node";
 import ArrowRight from "@/assets/ArrowRight.svg";
 import PlayPause from "@/assets/PlayPause.svg";
 import { useInterval } from "usehooks-ts";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import exp from "constants";
+
 
 interface Artist {
   name?: string,
@@ -29,14 +27,7 @@ const spotifyApi = new SpotifyWebApi({
   clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
 })
 
-/** Protected page. The main app lives here */
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
+export default function Spin({accessToken}: {accessToken: string}) {
   const [trackInfo, setTrackInfo] = useState<TrackInfo | null>(null);
   const [playerState, setPlayerState] = useState("");
   const [coverArtImage, setCoverArtImage] = useState("");
@@ -45,19 +36,9 @@ export default function Page({
   const [notPlaying, setNotPlaying] = useState(false);
   const CHECK_NEW_SONG_INTERVAL = 10000;
 
-  const router = useRouter();
-  let accessToken: string | null = "";
-  let expiresIn: number | null = 0;
   if (typeof window !== "undefined") {
-    accessToken = localStorage.getItem("access_token");
-    expiresIn = parseInt(localStorage.getItem("expires_in") || "");
-    router.replace("/spin");
+    window.history.replaceState({}, "", "/");
   }
-  if (!accessToken || !expiresIn || expiresIn < 60) {
-    const code = searchParams.code;
-    accessToken = useAuth(code as string) || null;
-  }
-
   const getTrackAndArtist = (async () => {
     if (!accessToken) return;
     try {
@@ -104,7 +85,7 @@ export default function Page({
         const {data, error}: any = await axios.get((
           process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL 
             ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}` 
-            : "http://localhost:3000") + geminiSlug); // works?
+            : "http://localhost:3000") + geminiSlug);
         if (error) throw new Error(error);
         if (data.text) {
           setDescription(data.text);
