@@ -6,7 +6,9 @@ export async function POST(request: Request) {
   const req = await request.json();
   const refreshToken = req.refreshToken;
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/spin` : "http://localhost:3000/spin",
+    redirectUri: process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL 
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/spin` 
+      : "http://localhost:3000/spin",
     clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     refreshToken,
