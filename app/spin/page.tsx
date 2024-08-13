@@ -103,7 +103,7 @@ export default function Page({
         const geminiSlug = `/gemini?artist=${trackInfo.artists?.[0]?.name}`;
         const {data, error}: any = await axios.get((
           process.env.VERCEL_URL 
-            ? `https://${process.env.VERCEL_URL}` 
+            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
             : "http://localhost:3000") + geminiSlug); // works?
         if (error) throw new Error(error);
         if (data.text) {
