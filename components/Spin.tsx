@@ -34,7 +34,7 @@ export default function Spin({accessToken}: {accessToken: string}) {
   const [description, setDescription] = useState("");
   const [artistImage, setArtistImage] = useState("");
   const [notPlaying, setNotPlaying] = useState(false);
-  const [userWhiteListed, setUserWhitelisted] = useState(true);
+  const [userWhiteListed, setUserWhitelisted] = useState(false);
   const CHECK_NEW_SONG_INTERVAL = 10000;
 
   if (typeof window !== "undefined") {
@@ -44,8 +44,11 @@ export default function Spin({accessToken}: {accessToken: string}) {
     if (!accessToken) return;
     try {
       const trackData = await spotifyApi.getMyCurrentPlayingTrack();
-      if (trackData.statusCode === 403) {
-        setUserWhitelisted(false);
+      if (trackData.statusCode === 200 || trackData.statusCode === 204) {
+        setUserWhitelisted(true);
+      }
+      if (trackData.statusCode === 204) {
+        setNotPlaying(true);
       }
       if (trackData.body?.item) {
         const item = trackData.body.item as TrackInfo;
@@ -55,14 +58,7 @@ export default function Spin({accessToken}: {accessToken: string}) {
         setPlayerState(trackData.body.is_playing ? 'play' : 'pause');
         setArtistImage(artist.body?.images[0]?.url || "");
       }
-      else {
-        throw new Error("Track not found.");
-      }
-
     } catch(error) {
-      if (error?.toString() === "Error: Track not found.") {
-        setNotPlaying(true);
-      }
       console.log(error);
     }
   });
