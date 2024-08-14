@@ -34,6 +34,7 @@ export default function Spin({accessToken}: {accessToken: string}) {
   const [description, setDescription] = useState("");
   const [artistImage, setArtistImage] = useState("");
   const [notPlaying, setNotPlaying] = useState(false);
+  const [userWhiteListed, setUserWhitelisted] = useState(true);
   const CHECK_NEW_SONG_INTERVAL = 10000;
 
   if (typeof window !== "undefined") {
@@ -43,6 +44,9 @@ export default function Spin({accessToken}: {accessToken: string}) {
     if (!accessToken) return;
     try {
       const trackData = await spotifyApi.getMyCurrentPlayingTrack();
+      if (trackData.statusCode === 403) {
+        setUserWhitelisted(false);
+      }
       if (trackData.body?.item) {
         const item = trackData.body.item as TrackInfo;
         const artist = await spotifyApi.getArtist(item.artists?.[0]?.id || "");
@@ -175,6 +179,12 @@ export default function Spin({accessToken}: {accessToken: string}) {
           />
           {notPlaying && (
             <p className="text-white py-4">We haven't detected a song playing on your spotify. Please choose a song and click play!</p>
+          )}
+          {!userWhiteListed && (
+            <p className="text-white py-4">
+              This app is still in development mode, meaning only Spotify accounts on the approved users list can access it.
+              If you would like to be added, please email myles.anderson@princeton.edu.
+            </p>
           )}
         </div>
       )}
