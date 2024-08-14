@@ -4,13 +4,9 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
 export const metadata: Metadata = {
-  title: 'Welcome to Spinning',
-  description: 'A spinning experience',
+  title: 'spinning',
+  description: 'Add to your streaming experience.',
 }
 
 export default function RootLayout({
