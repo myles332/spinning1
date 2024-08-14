@@ -35,7 +35,10 @@ export default function Spin({accessToken}: {accessToken: string}) {
   const [artistImage, setArtistImage] = useState("");
   const [notPlaying, setNotPlaying] = useState(false);
   const [userWhiteListed, setUserWhitelisted] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+
   const CHECK_NEW_SONG_INTERVAL = 10000;
+  const SHOW_MESSAGE_INTERVAL = 2000;
 
   if (typeof window !== "undefined") {
     window.history.replaceState({}, "", "/");
@@ -100,6 +103,12 @@ export default function Spin({accessToken}: {accessToken: string}) {
   useInterval(() => {
     getTrackAndArtist();
   }, CHECK_NEW_SONG_INTERVAL);
+
+  useInterval(() => {
+    if (!trackInfo) {
+      setShowMessage(true);
+    }
+  }, SHOW_MESSAGE_INTERVAL);
 
   const handlePlayPause = (playerState: string) => {
     try {
@@ -176,7 +185,7 @@ export default function Spin({accessToken}: {accessToken: string}) {
           {notPlaying && (
             <p className="text-white py-4">We haven't detected a song playing on your spotify. Please choose a song and click play!</p>
           )}
-          {!userWhiteListed && (
+          {(!userWhiteListed && showMessage) && (
             <p className="text-white py-4">
               This app is still in development mode, meaning only Spotify accounts on the approved users list can access it.
               If you would like to be added, please email myles.anderson@princeton.edu.
