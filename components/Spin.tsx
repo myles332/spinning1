@@ -142,40 +142,46 @@ export default function Spin({accessToken}: {accessToken: string}) {
   }
 
   return (
-    <div className="h-screen w-screen bg-[#08182B]">
+    <div className="min-h-screen w-full bg-[#08182B] px-4 py-8 md:px-8 md:py-12">
       {trackInfo ? (
-        <div className="h-[70svh] flex flex-row justify-center items-start py-12">
-          <div className="flex-1 max-w-[25%] px-4">
-            <h1 className="bg-gradient-to-r from-[#006299] to-[#5856D6] text-[2.5rem] text-transparent bg-clip-text inline-block font-semibold">now spinning</h1>
-            <div className="pt-8">
-              <p className="text-white text-4xl">{trackInfo.name}</p>
-              <p className="text-white text-xl">{trackInfo.artists?.[0]?.name}</p>
-            </div>
-            <Image src={artistImage} alt="artist image" width={320} height={320} className="my-8 rounded overflow-hidden"></Image>
+        <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-8">
+        <div className="w-full md:flex-1 md:max-w-[25%]">
+          <h1 className="bg-gradient-to-r from-[#006299] to-[#5856D6] text-2xl md:text-[2.5rem] text-transparent bg-clip-text inline-block font-semibold leading-relaxed pb-2">now spinning</h1>
+          <div className="pt-4 md:pt-8">
+            <p className="text-white text-2xl md:text-4xl">{trackInfo.name}</p>
+            <p className="text-white text-lg md:text-xl">{trackInfo.artists?.[0]?.name}</p>
           </div>
-          <div className="flex flex-col items-center mx-8">
-            <a href={trackInfo?.external_urls?.spotify}>
-              <img src={coverArtImage} className="w-[80svh] h-[80svh] mb-8 mt-5 hover:opacity-90 transition cursor-pointer rounded overflow-hidden"></img>
-            </a>
-            <div className="flex flex-row gap-8">
-              <button onClick={handleSkipBack}>
-                <img src={ArrowRight.src} className="hover:opacity-100 opacity-75 transition"></img>
-              </button>
-              <button onClick={() => handlePlayPause(playerState)}>
-                <img src={PlayPause.src} className="hover:opacity-100 opacity-75 transition"></img>
-              </button>
-              <button onClick={handleSkipAhead}>
-                <img src={ArrowRight.src} className="hover:opacity-100 opacity-75 transition rotate-180"></img>
-              </button>
-            </div>
-          </div>
-          <div className="flex-1 max-w-[25%] px-4">
-            <h1 className="bg-gradient-to-r from-[#006299] to-[#5856D6] text-[2.5rem] text-transparent bg-clip-text inline-block font-semibold">{`about ${trackInfo.artists?.[0]?.name}`}</h1>
-            <p className="text-white text-lg py-4">{description}</p>
+          <Image src={artistImage} alt="artist image" width={320} height={320} className="w-full max-w-[320px] my-4 md:my-8 rounded overflow-hidden"></Image>
+        </div>
+        <div className="w-full md:flex-1 flex flex-col items-center">
+          <a href={trackInfo?.external_urls?.spotify} className="w-full max-w-[80vw] md:max-w-[80vh]">
+            <Image 
+              src={coverArtImage} 
+              alt="Album cover" 
+              width={800} 
+              height={800} 
+              className="w-full h-auto mb-4 md:mb-8 mt-2 md:mt-5 hover:opacity-90 transition cursor-pointer rounded overflow-hidden"
+            />
+          </a>
+          <div className="flex flex-row gap-8">
+            <button onClick={handleSkipBack}>
+              <img src={ArrowRight.src} className="hover:opacity-100 opacity-75 transition"></img>
+            </button>
+            <button onClick={() => handlePlayPause(playerState)}>
+              <img src={PlayPause.src} className="hover:opacity-100 opacity-75 transition"></img>
+            </button>
+            <button onClick={handleSkipAhead}>
+              <img src={ArrowRight.src} className="hover:opacity-100 opacity-75 transition rotate-180"></img>
+            </button>
           </div>
         </div>
+        <div className="w-full md:flex-1 md:max-w-[25%]">
+          <h1 className="bg-gradient-to-r from-[#006299] to-[#5856D6] text-2xl md:text-[2.5rem] text-transparent bg-clip-text inline-block font-semibold leading-relaxed pb-2">{`about ${trackInfo.artists?.[0]?.name}`}</h1>
+          <p className="text-white text-base md:text-lg py-4">{description}</p>
+        </div>
+      </div>
       ) : (
-        <div className="h-screen flex flex-col justify-center items-center">
+        <div className="min-h-screen w-full bg-[#08182B] flex flex-col justify-center items-center px-4 py-8">
           <Audio 
             height="80"
             width="80"
@@ -183,10 +189,10 @@ export default function Spin({accessToken}: {accessToken: string}) {
             ariaLabel="three-dots-loading"
           />
           {notPlaying && (
-            <p className="text-white py-4">We haven't detected a song playing on your spotify. Please choose a song and click play!</p>
+            <p className="text-white text-center py-4">We haven't detected a song playing on your spotify. Please choose a song and click play!</p>
           )}
           {(!userWhiteListed && showMessage) && (
-            <p className="text-white py-4">
+            <p className="text-white text-center py-4">
               This app is still in development mode, meaning only Spotify accounts on the approved users list can access it.
               If you would like to be added, please email myles.anderson@princeton.edu.
             </p>
